@@ -30,8 +30,8 @@ A simple task manager built with **React**, **JavaScript**, and **CSS**. This pr
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/jalilmohseni/todo-pro.git
-cd todo-pro
+git clone https://github.com/jalilmohseni/todo-app.git
+cd todo-app
 
 
 2. Install dependencies

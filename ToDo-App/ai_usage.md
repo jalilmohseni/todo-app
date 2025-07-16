@@ -1,6 +1,6 @@
 # 🤖 AI Usage Report – ToDo-Pro React App
 
-This document describes how AI tools (ChatGPT & GitHub Copilot) were used during the development of the **ToDo-Pro** task management application.
+This document describes how AI tools (ChatGPT & GitHub Copilot) were used during the development of the **ToDo-App** task management application.
 
 ---
 
@@ -35,7 +35,7 @@ AI was used as a **collaborative assistant** to:
 | Prompt | Purpose |
 |--------|---------|
 | `Write a custom hook to sync React state with localStorage` | Persistent state handling |
-| `How can I toggle between dark and light themes in React using class names?` | Theme toggle logic |
+| `How can I toggle between dark and light themes in React?` | Theme toggle logic |
 | `Validate a task input field to prevent empty or duplicate values` | Input validation |
 | `Fix: JSON.parse error when loading tasks from localStorage` | Debugging runtime issues |
 | `Make my task manager layout responsive for mobile` | Responsive styling guidance |
