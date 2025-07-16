@@ -1,0 +1,225 @@
+/* ===========================
+   THEME VARIABLES
+=========================== */
+:root {
+  --bg-light: #ffffff;
+  --bg-dark: #121212;
+  --text-light: #111111;
+  --text-dark: #f1f1f1;
+  --item-bg-light: #f9f9f9;
+  --item-bg-dark: #1e1e1e;
+  --border-light: #ddd;
+  --border-dark: #444;
+  --primary: #007bff;
+  --primary-hover: #0056b3;
+  --success: #28a745;
+  --danger: #dc3545;
+}
+
+/* Light Theme */
+.light {
+  --bg-color: var(--bg-light);
+  --text-color: var(--text-light);
+  --item-bg: var(--item-bg-light);
+  --border-color: var(--border-light);
+}
+
+/* Dark Theme */
+.dark {
+  --bg-color: var(--bg-dark);
+  --text-color: var(--text-dark);
+  --item-bg: var(--item-bg-dark);
+  --border-color: var(--border-dark);
+}
+
+/* ===========================
+   BASE STYLES
+=========================== */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 20px;
+}
+
+.app-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* ===========================
+   THEME TOGGLE
+=========================== */
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+  float: right;
+  margin-bottom: 1rem;
+}
+
+/* ===========================
+   TITLE
+=========================== */
+.title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+/* ===========================
+   TASK INPUT
+=========================== */
+.task-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-direction: column;
+}
+
+.task-input input {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--item-bg);
+  color: var(--text-color);
+  flex: 1;
+}
+
+.task-input button {
+  padding: 8px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.task-input button:hover {
+  background-color: var(--primary-hover);
+}
+
+.error {
+  color: red;
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+/* ===========================
+   TASK LIST / ITEM
+=========================== */
+.task-list {
+  margin-top: 10px;
+}
+
+.task-item {
+  background-color: var(--item-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.task-text {
+  flex: 1;
+  margin-right: 10px;
+  cursor: pointer;
+  word-break: break-word;
+}
+
+.task-item.completed .task-text {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* ===========================
+   TASK ITEM ACTIONS
+=========================== */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 8px;
+}
+
+.actions button {
+  border: none;
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+}
+
+.actions button.edit {
+  background-color: var(--success);
+}
+
+.actions button.delete {
+  background-color: var(--danger);
+}
+
+.actions button:hover {
+  opacity: 0.85;
+}
+
+/* ===========================
+   FILTER BUTTONS
+=========================== */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.filters button {
+  padding: 5px 10px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-color);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filters .active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* ===========================
+   EMPTY STATE
+=========================== */
+.empty {
+  text-align: center;
+  color: gray;
+  font-style: italic;
+  margin-top: 2rem;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+=========================== */
+@media (min-width: 600px) {
+  .task-input {
+    flex-direction: row;
+  }
+
+  .task-input button {
+    width: auto;
+  }
+
+  .actions {
+    margin-top: 0;
+  }
+}
