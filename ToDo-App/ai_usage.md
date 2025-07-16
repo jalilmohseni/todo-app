@@ -1,4 +1,4 @@
-# 🤖 AI Usage Report – ToDo-Pro React App
+# 🤖 AI Usage Report – ToDo- React App
 
 This document describes how AI tools (ChatGPT & GitHub Copilot) were used during the development of the **ToDo-App** task management application.
 
