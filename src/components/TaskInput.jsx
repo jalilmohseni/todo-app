@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const TaskInput = ({ onAdd }) => {
-  const [text, setText] = useState('');
-  const [error, setError] = useState('');
+  const [text, setText] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const trimmed = text.trim();
     if (!trimmed) {
-      setError('Task title cannot be empty.');
+      setError("Task title cannot be empty.");
       return;
     }
     onAdd(trimmed);
-    setText('');
-    setError('');
+    setText("");
+    setError("");
   };
 
   return (
@@ -24,10 +24,11 @@ const TaskInput = ({ onAdd }) => {
         placeholder="Enter a task"
         onChange={(e) => {
           setText(e.target.value);
-          setError('');
+          setError("");
         }}
       />
       <button type="submit">Add</button>
+      {/* //TODO UX is not correct when have error */}
       {error && <div className="error">{error}</div>}
     </form>
   );

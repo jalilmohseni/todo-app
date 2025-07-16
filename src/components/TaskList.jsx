@@ -1,5 +1,5 @@
-import React from 'react';
-import TaskItem from './TaskItem';
+import React from "react";
+import TaskItem from "./TaskItem";
 
 const TaskList = ({ tasks, onToggle, onDelete, onUpdate }) => {
   if (!tasks.length) return <p className="empty">No tasks to show.</p>;

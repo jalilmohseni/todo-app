@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const TaskItem = ({ task, onToggle, onDelete, onUpdate }) => {
   const [editing, setEditing] = useState(false);
   const [editText, setEditText] = useState(task.title);
+
+  //TODO should also have validation while edit
 
   const handleEdit = () => {
     if (editing && editText.trim()) {
@@ -12,15 +14,15 @@ const TaskItem = ({ task, onToggle, onDelete, onUpdate }) => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') handleEdit();
-    if (e.key === 'Escape') {
+    if (e.key === "Enter") handleEdit();
+    if (e.key === "Escape") {
       setEditText(task.title);
       setEditing(false);
     }
   };
 
   return (
-    <div className={`task-item ${task.completed ? 'completed' : ''}`}>
+    <div className={`task-item ${task.completed ? "completed" : ""}`}>
       <input
         type="checkbox"
         checked={task.completed}
@@ -31,6 +33,7 @@ const TaskItem = ({ task, onToggle, onDelete, onUpdate }) => {
         <input
           type="text"
           value={editText}
+          // TODO try to avoid inline function declaration
           onChange={(e) => setEditText(e.target.value)}
           onBlur={handleEdit}
           onKeyDown={handleKeyDown}
@@ -40,8 +43,9 @@ const TaskItem = ({ task, onToggle, onDelete, onUpdate }) => {
         <span onDoubleClick={() => setEditing(true)}>{task.title}</span>
       )}
       <div className="actions">
-        <button onClick={handleEdit} title={editing ? 'Save' : 'Edit'}>
-          {editing ? '💾' : '✏️'}
+        {/* TODO save button not working on edit */}
+        <button onClick={handleEdit} title={editing ? "Save" : "Edit"}>
+          {editing ? "💾" : "✏️"}
         </button>
         <button onClick={() => onDelete(task.id)} title="Delete">
           🗑️
