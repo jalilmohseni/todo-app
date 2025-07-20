@@ -1,58 +1,81 @@
-import React, { useState } from "react";
+
+import React, { useState, FC } from "react";
 import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
 import ThemeToggle from "./components/ThemeToggle";
 import useLocalStorage from "./hooks/useLocalStorage";
 import "./index.css";
 
-const App = () => {
-  const [filter, setFilter] = useState("all");
-  const [tasks, setTasks] = useLocalStorage("tasks", []);
+// Define a type for a single task
+export interface Task {
+  id: number;
+  title: string;
+  completed: boolean;
+}
 
-  // Add a new task
-  const addTask = (title) => {
+const App: FC = () => {
+  // Filter state: 'all', 'completed', or 'incomplete'
+  const [filter, setFilter] = useState<"all" | "completed" | "incomplete">("all");
+
+  // LocalStorage state for task list, using custom hook
+  const [tasks, setTasks] = useLocalStorage<Task[]>("tasks", []);
+
+  /**
+   * Adds a new task to the task list.
+   * Prevents empty titles and duplicates (case-sensitive).
+   */
+  const addTask = (title: string): boolean => {
     const trimmed = title.trim();
     if (!trimmed) {
       alert("Task title cannot be empty.");
       return false;
     }
-    //TODO  this filter is repetitive can be moved and made common
-    //TODO  comparison should be case sensitive
+
+    // TODO: Move this duplicate check to a common utility
     if (tasks.some((task) => task.title === trimmed)) {
       alert("Duplicate task title.");
       return false;
     }
 
-    const newTask = {
-      id: Date.now(),
+    const newTask: Task = {
+      id: Date.now(), // Use timestamp as unique ID
       title: trimmed,
       completed: false,
     };
+
     setTasks([newTask, ...tasks]);
     return true;
   };
 
-  // Toggle completion status
-  const toggleTask = (id) => {
+  /**
+   * Toggles the completed status of a task.
+   */
+  const toggleTask = (id: number): void => {
     const updated = tasks.map((task) =>
       task.id === id ? { ...task, completed: !task.completed } : task
     );
     setTasks(updated);
   };
 
-  // Delete a task
-  const deleteTask = (id) => {
+  /**
+   * Deletes a task by ID.
+   */
+  const deleteTask = (id: number): void => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  // Update task title
-  const updateTask = (id, newTitle) => {
+  /**
+   * Updates the title of a task.
+   * Prevents empty titles and duplicates (excluding self).
+   */
+  const updateTask = (id: number, newTitle: string): void => {
     const trimmed = newTitle.trim();
     if (!trimmed) {
       alert("Task title cannot be empty.");
       return;
     }
-    //TODO  this filter is repetitive can be moved and made common
+
+    // TODO: Move this duplicate check to a common utility
     if (tasks.some((task) => task.title === trimmed && task.id !== id)) {
       alert("Duplicate task title.");
       return;
@@ -64,26 +87,29 @@ const App = () => {
     setTasks(updated);
   };
 
-  // Filter tasks based on filter state
+  /**
+   * Applies the current filter to the task list.
+   */
   const filteredTasks = tasks.filter((task) => {
     if (filter === "completed") return task.completed;
     if (filter === "incomplete") return !task.completed;
-    return true;
+    return true; // "all"
   });
 
   return (
     <div className="app-container">
       <ThemeToggle />
-      {/* TODO On theme change the is delay in change, first container changes theme then body, debug */}
+      {/* TODO: Theme toggle has delay between html and body — investigate */}
       <h1 className="title">To-Do Task Manager</h1>
 
       <TaskInput onAdd={addTask} />
+
       <div className="filters">
-        {/* TODO can be moved to constants  */}
+        {/* TODO: Move filter values to a constant enum or array */}
         {["all", "completed", "incomplete"].map((type) => (
           <button
             key={type}
-            onClick={() => setFilter(type)}
+            onClick={() => setFilter(type as "all" | "completed" | "incomplete")}
             className={filter === type ? "active" : ""}
             aria-pressed={filter === type}
           >

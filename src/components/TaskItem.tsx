@@ -1,24 +1,45 @@
-import React, { useState } from "react";
 
-const TaskItem = ({ task, onToggle, onDelete, onUpdate }) => {
-  const [editing, setEditing] = useState(false);
-  const [editText, setEditText] = useState(task.title);
 
-  //TODO should also have validation while edit
+import React, { useState, ChangeEvent, KeyboardEvent, FC } from "react";
 
+// Define the Task interface
+interface Task {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+// Define props for the TaskItem component
+interface TaskItemProps {
+  task: Task;
+  onToggle: (id: number) => void;
+  onDelete: (id: number) => void;
+  onUpdate: (id: number, newTitle: string) => void;
+}
+
+const TaskItem: FC<TaskItemProps> = ({ task, onToggle, onDelete, onUpdate }) => {
+  const [editing, setEditing] = useState<boolean>(false);
+  const [editText, setEditText] = useState<string>(task.title);
+
+  // TODO: should also have validation while edit
   const handleEdit = () => {
-    if (editing && editText.trim()) {
-      onUpdate(task.id, editText.trim());
+    const trimmed = editText.trim();
+    if (editing && trimmed) {
+      onUpdate(task.id, trimmed);
     }
     setEditing(!editing);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") handleEdit();
     if (e.key === "Escape") {
       setEditText(task.title);
       setEditing(false);
     }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEditText(e.target.value);
   };
 
   return (
@@ -33,8 +54,7 @@ const TaskItem = ({ task, onToggle, onDelete, onUpdate }) => {
         <input
           type="text"
           value={editText}
-          // TODO try to avoid inline function declaration
-          onChange={(e) => setEditText(e.target.value)}
+          onChange={handleInputChange} // Removed inline function
           onBlur={handleEdit}
           onKeyDown={handleKeyDown}
           autoFocus
@@ -43,7 +63,7 @@ const TaskItem = ({ task, onToggle, onDelete, onUpdate }) => {
         <span onDoubleClick={() => setEditing(true)}>{task.title}</span>
       )}
       <div className="actions">
-        {/* TODO save button not working on edit */}
+        {/* TODO: save button not working on edit */}
         <button onClick={handleEdit} title={editing ? "Save" : "Edit"}>
           {editing ? "💾" : "✏️"}
         </button>
