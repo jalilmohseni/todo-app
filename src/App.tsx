@@ -1,115 +1,73 @@
-
-import React, { useState, FC } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
 import ThemeToggle from "./components/ThemeToggle";
-import useLocalStorage from "./hooks/useLocalStorage";
-import "./index.css";
+import { taskReducer, Task } from "./reducers/taskReducer";
 
-// Define a type for a single task
-export interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+const App: React.FC = () => {
+  const [filter, setFilter] = useState("all");
 
-const App: FC = () => {
-  // Filter state: 'all', 'completed', or 'incomplete'
-  const [filter, setFilter] = useState<"all" | "completed" | "incomplete">("all");
+  const [tasks, dispatch] = useReducer(taskReducer, [], () => {
+    const stored = localStorage.getItem("tasks");
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
 
-  // LocalStorage state for task list, using custom hook
-  const [tasks, setTasks] = useLocalStorage<Task[]>("tasks", []);
+  // Sync to localStorage on any change
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
-  /**
-   * Adds a new task to the task list.
-   * Prevents empty titles and duplicates (case-sensitive).
-   */
-  const addTask = (title: string): boolean => {
+  // Add task
+  const addTask = (title: string) => {
     const trimmed = title.trim();
-    if (!trimmed) {
-      alert("Task title cannot be empty.");
-      return false;
-    }
-
-    // TODO: Move this duplicate check to a common utility
-    if (tasks.some((task) => task.title === trimmed)) {
-      alert("Duplicate task title.");
-      return false;
-    }
+    if (!trimmed) return false;
+    if (tasks.some((task) => task.title === trimmed)) return false;
 
     const newTask: Task = {
-      id: Date.now(), // Use timestamp as unique ID
+      id: Date.now(),
       title: trimmed,
       completed: false,
     };
-
-    setTasks([newTask, ...tasks]);
+    dispatch({ type: "ADD", payload: newTask });
     return true;
   };
 
-  /**
-   * Toggles the completed status of a task.
-   */
-  const toggleTask = (id: number): void => {
-    const updated = tasks.map((task) =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    );
-    setTasks(updated);
-  };
+  const toggleTask = (id: number) => dispatch({ type: "TOGGLE", payload: id });
 
-  /**
-   * Deletes a task by ID.
-   */
-  const deleteTask = (id: number): void => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
+  const deleteTask = (id: number) => dispatch({ type: "DELETE", payload: id });
 
-  /**
-   * Updates the title of a task.
-   * Prevents empty titles and duplicates (excluding self).
-   */
-  const updateTask = (id: number, newTitle: string): void => {
+  const updateTask = (id: number, newTitle: string) => {
     const trimmed = newTitle.trim();
-    if (!trimmed) {
-      alert("Task title cannot be empty.");
-      return;
-    }
+    if (!trimmed) return;
+    if (tasks.some((t) => t.title === trimmed && t.id !== id)) return;
 
-    // TODO: Move this duplicate check to a common utility
-    if (tasks.some((task) => task.title === trimmed && task.id !== id)) {
-      alert("Duplicate task title.");
-      return;
-    }
-
-    const updated = tasks.map((task) =>
-      task.id === id ? { ...task, title: trimmed } : task
-    );
-    setTasks(updated);
+    dispatch({ type: "UPDATE", payload: { id, title: trimmed } });
   };
 
-  /**
-   * Applies the current filter to the task list.
-   */
   const filteredTasks = tasks.filter((task) => {
     if (filter === "completed") return task.completed;
     if (filter === "incomplete") return !task.completed;
-    return true; // "all"
+    return true;
   });
 
   return (
     <div className="app-container">
       <ThemeToggle />
-      {/* TODO: Theme toggle has delay between html and body — investigate */}
       <h1 className="title">To-Do Task Manager</h1>
 
       <TaskInput onAdd={addTask} />
-
       <div className="filters">
-        {/* TODO: Move filter values to a constant enum or array */}
         {["all", "completed", "incomplete"].map((type) => (
           <button
             key={type}
-            onClick={() => setFilter(type as "all" | "completed" | "incomplete")}
+            onClick={() => setFilter(type)}
             className={filter === type ? "active" : ""}
             aria-pressed={filter === type}
           >
